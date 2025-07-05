@@ -25,6 +25,15 @@
                 </a>
             </li><!-- End Search Icon-->
 
+            </li><li class="nav-item dropdown">
+                </li><?php if (session()->has('diskon_nominal') && session()->get('diskon_nominal') > 0): ?>
+                <li class="nav-item d-flex align-items-center me-3">
+                    <span style="color: green; font-weight: bold; white-space: nowrap;">
+                        <i class="bi bi-tags-fill me-1" style="font-size: 1.2em;"></i> Diskon Hari Ini: Rp <?= number_format(session()->get('diskon_nominal'), 0, ',', '.') ?>!
+                    </span>
+                </li>
+            <?php endif; ?>
+
             <li class="nav-item dropdown">
 
                 <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">

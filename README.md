@@ -1,68 +1,136 @@
-# CodeIgniter 4 Application Starter 
+# Toko Online - Pemrograman Web Lanjut (UAS)
 
-## What is CodeIgniter??
+Aplikasi toko online sederhana yang dikembangkan menggunakan framework CodeIgniter 4 untuk mata kuliah Pemrograman Web Lanjut. Proyek ini mencakup fitur-fitur dasar e-commerce seperti manajemen produk, keranjang belanja, proses checkout, autentikasi user, dan manajemen diskon.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Fitur
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+* **Autentikasi User:**
+    * Sistem login dan logout untuk user dan admin.
+    * Pembatasan akses berdasarkan role (admin dapat mengakses manajemen diskon).
+* **Manajemen Produk:**
+    * Menampilkan daftar produk yang tersedia.
+    * Detail produk.
+* **Keranjang Belanja:**
+    * Menambah, mengurangi, dan menghapus produk dari keranjang.
+    * Perhitungan subtotal.
+    * **Fitur Baru:** Penerapan diskon pada harga produk di keranjang belanja, jika ada diskon yang aktif.
+* **Proses Checkout:**
+    * Pengisian data alamat pengiriman.
+    * Integrasi dengan webservice untuk pemilihan kelurahan dan jenis layanan pengiriman (estimasi ongkir).
+    * **Fitur Baru:** Penerapan diskon pada total harga produk saat menyimpan transaksi ke database.
+* **Manajemen Diskon:**
+    * Tabel `diskon` di database untuk menyimpan informasi diskon harian.
+    * Sistem migrasi dan seeder untuk pengelolaan data diskon.
+    * Pencarian diskon otomatis saat user login.
+    * Notifikasi diskon aktif di header website.
+    * Halaman manajemen diskon khusus untuk role admin (CRUD: Create, Read, Update, Delete).
+    * Validasi tanggal unik saat menambah diskon baru.
+    * Input tanggal `readonly` pada form edit diskon.
+* **Dashboard Transaksi:**
+    * Aplikasi dashboard sederhana terpisah yang terintegrasi dengan webservice Toko.
+    * Menampilkan daftar transaksi pembelian.
+    * **Fitur Baru:** Menampilkan jumlah total item yang dibeli untuk setiap transaksi di dashboard.
+    * Deployable dalam folder `public` proyek utama.
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Instalasi
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini:
 
-## Installation & updates
+1.  **Clone Repository:**
+    ```bash
+    git clone [https://github.com/Rafly168/Sinau-CI4.git](https://github.com/Rafly168/Sinau-CI4.git)
+    cd Sinau-CI4
+    ```
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+2.  **Instal Composer Dependencies:**
+    ```bash
+    composer install
+    ```
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+3.  **Konfigurasi Environment (.env):**
+    * Salin file `env` menjadi `.env`:
+        ```bash
+        cp .env.example .env
+        ```
+    * Buka file `.env` dan atur konfigurasi database Anda (nama database, username, password). Contoh:
+        ```env
+        database.default.hostname = localhost
+        database.default.database = nama_database_toko_anda
+        database.default.username = root
+        database.default.password = 
+        database.default.DBDriver = MySQLi
+        ```
+    * Generate `app.baseURL` (sesuaikan dengan URL proyek Anda):
+        ```env
+        app.baseURL = 'http://localhost:8080/'
+        ```
+    * Generate `app.encryption.key` (opsional, tapi direkomendasikan):
+        ```bash
+        php spark key:generate
+        ```
 
-## Setup
+4.  **Jalankan Migrasi Database:**
+    ```bash
+    php spark migrate
+    ```
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+5.  **Jalankan Seeder (Untuk data awal dan data diskon):**
+    ```bash
+    php spark db:seed AllSeeder # Jika Anda memiliki AllSeeder yang memanggil seeder lain
+    php spark db:seed DiskonSeeder # Atau jalankan seeder diskon secara spesifik
+    ```
+    *Pastikan Anda memiliki seeder untuk user admin awal.*
 
-## Important Change with index.php
+6.  **Siapkan Dashboard Sederhana :**
+    * Pastikan project Dashboard terpisah Anda sudah dikembangkan dan berfungsi.
+    * Salin folder project Dashboard Anda (misal `dashboard-toko`) ke dalam folder `public` dari project utama ini.
+        ```bash
+        cp -r /path/to/your/dashboard-toko-project public/dashboard-toko
+        ```
+        (Sesuaikan `/path/to/your/dashboard-toko-project` dengan lokasi sebenarnya dari folder dashboard Anda).
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+7.  **Jalankan Aplikasi:**
+    ```bash
+    php spark serve
+    ```
+    Aplikasi akan berjalan di `http://localhost:8080/` (atau port lain yang ditentukan).
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+## Struktur Proyek
 
-**Please** read the user guide for a better explanation of how CI4 works!
-
-## Repository Management
-
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 7.4 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-
-> [!WARNING]
-> The end of life date for PHP 7.4 was November 28, 2022.
-> The end of life date for PHP 8.0 was November 26, 2023.
-> If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> The end of life date for PHP 8.1 will be November 25, 2024.
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Berikut adalah struktur direktori utama proyek ini:
+Sinau-CI4/
+├── app/
+│   ├── Controllers/
+│   │   ├── AuthController.php      # Mengelola login/logout user.
+│   │   ├── DiskonController.php    # Mengelola CRUD data diskon (Fitur Baru).
+│   │   ├── Home.php                # Controller utama.
+│   │   └── ... (Controller lain untuk produk, keranjang, dll.)
+│   ├── Database/
+│   │   ├── Migrations/
+│   │   │   └── 2025-XX-XX_AddDiskonTable.php # Migrasi untuk tabel diskon (Fitur Baru).
+│   │   └── Seeds/
+│   │       ├── DiskonSeeder.php    # Seeder untuk mengisi data diskon (Fitur Baru).
+│   │       └── ... (Seeder lain untuk user, produk, dll.)
+│   ├── Models/
+│   │   ├── DiskonModel.php         # Model untuk interaksi dengan tabel diskon (Fitur Baru).
+│   │   ├── UserModel.php           # Model untuk interaksi dengan tabel user.
+│   │   └── ... (Model lain untuk produk, transaksi, dll.)
+│   ├── Views/
+│   │   ├── auth/                   # View terkait autentikasi.
+│   │   ├── diskon/                 # View untuk manajemen diskon (index, create, edit) (Fitur Baru).
+│   │   ├── layout/                 # File layout utama (header, footer, dll.)
+│   │   │   └── header.php          # Header tempat menampilkan info diskon (Modifikasi).
+│   │   └── ... (View lain untuk home, produk, keranjang, dll.)
+│   └── Config/
+│       └── Routes.php              # Definisi rute aplikasi (Rute untuk diskon ditambahkan).
+├── public/
+│   ├── index.php                   # File entri utama aplikasi.
+│   ├── dashboard-toko/             # Folder berisi project dashboard sederhana (Fitur Baru - UAS Soal 4).
+│   └── ... (Aset publik seperti CSS, JS, gambar)
+├── tests/
+├── writable/
+├── .env.example
+├── .env                        # File konfigurasi lingkungan.
+├── composer.json
+├── README.md                   # File dokumentasi proyek ini (Modifikasi).
+└── ... (File dan folder CodeIgniter lainnya)
